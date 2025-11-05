@@ -11,6 +11,10 @@ Dieses Repository enthält von Claude generierte HTML-Spiele und Projekte.
 
 - [Snake Game](/snake-game.html) - Ein klassisches Snake-Spiel
 
+## Tools
+
+- [LingQ zu Pleco Konverter](/lingq-converter.html) - Konvertiere LingQ CSV-Exports in Pleco XML-Format
+
 ## Über diese Seite
 
 Diese Seite wird mit GitHub Pages und Jekyll gehostet.

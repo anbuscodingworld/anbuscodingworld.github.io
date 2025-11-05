@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LingQ zu Pleco Konverter - Anbu's Homepage</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+        }
+
+        .upload-section {
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            background: #f9fafb;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .upload-section:hover {
+            border-color: #667eea;
+            background: #f3f4f6;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #9ca3af;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .file-input-label:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-loaded {
+            margin-top: 16px;
+            color: #10b981;
+            font-weight: 500;
+        }
+
+        .file-loaded::before {
+            content: "✓ ";
+            font-weight: bold;
+        }
+
+        .convert-button {
+            width: 100%;
+            background: #10b981;
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .convert-button:hover:not(:disabled) {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .convert-button:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        .message {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .message.show {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message-icon {
+            margin-right: 12px;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+        }
+
+        .download-section {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 24px;
+            display: none;
+        }
+
+        .download-section.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .download-section h2 {
+            color: #1a1a2e;
+            margin-bottom: 16px;
+            font-size: 1.3rem;
+        }
+
+        .download-button {
+            width: 100%;
+            background: #667eea;
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .download-button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .download-button::before {
+            content: "⬇ ";
+            font-size: 1.2rem;
+            margin-right: 8px;
+        }
+
+        .download-note {
+            margin-top: 16px;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .instructions {
+            background: #eff6ff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 24px;
+        }
+
+        .instructions h3 {
+            color: #1e3a8a;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+
+        .instructions ol {
+            list-style-position: inside;
+            color: #1e40af;
+            line-height: 1.8;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        .instructions .note {
+            margin-top: 16px;
+            font-size: 0.875rem;
+            color: #1e40af;
+            padding-top: 16px;
+            border-top: 1px solid #bfdbfe;
+        }
+
+        .instructions .note strong {
+            font-weight: 700;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 24px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .upload-section {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Zurück zur Startseite</a>
+
+        <h1>LingQ zu Pleco Konverter</h1>
+        <p class="subtitle">Konvertiere deine LingQ CSV-Exports in das Pleco XML-Format</p>
+
+        <!-- Upload Section -->
+        <div class="upload-section">
+            <div class="upload-icon">📤</div>
+            <label class="file-input-label">
+                CSV-Datei wählen
+                <input type="file" id="fileInput" accept=".csv">
+            </label>
+            <div id="fileLoaded" class="file-loaded" style="display: none;">
+                Datei erfolgreich geladen
+            </div>
+        </div>
+
+        <!-- Convert Button -->
+        <button id="convertButton" class="convert-button" disabled>
+            In Pleco-Format konvertieren
+        </button>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="message error">
+            <span class="message-icon">⚠</span>
+            <span id="errorText"></span>
+        </div>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="message success">
+            <span class="message-icon">✓</span>
+            <span id="successText"></span>
+        </div>
+
+        <!-- Download Section -->
+        <div id="downloadSection" class="download-section">
+            <h2>Konvertierung abgeschlossen!</h2>
+            <button id="downloadButton" class="download-button">
+                Pleco XML-Datei herunterladen
+            </button>
+            <p class="download-note">
+                Importiere diese XML-Datei in Pleco über: Einstellungen → Karteikarten → Karten importieren
+            </p>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3>Anleitung:</h3>
+            <ol>
+                <li>Lade deine LingQ CSV-Datei hoch</li>
+                <li>Klicke auf "In Pleco-Format konvertieren"</li>
+                <li>Lade die generierte XML-Datei herunter</li>
+                <li>Importiere in Pleco: Einstellungen → Karteikarten → Karten importieren</li>
+            </ol>
+            <p class="note">
+                <strong>Hinweis:</strong> Pinyin-Aussprachedaten sind nicht in LingQ-Exporten enthalten.
+                Du musst eventuell Pinyin nach dem Import in Pleco manuell hinzufügen, oder die App generiert es automatisch.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let csvData = '';
+        let convertedXml = '';
+
+        const fileInput = document.getElementById('fileInput');
+        const fileLoaded = document.getElementById('fileLoaded');
+        const convertButton = document.getElementById('convertButton');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        const successMessage = document.getElementById('successMessage');
+        const successText = document.getElementById('successText');
+        const downloadSection = document.getElementById('downloadSection');
+        const downloadButton = document.getElementById('downloadButton');
+
+        // File upload handler
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                csvData = e.target.result;
+                fileLoaded.style.display = 'block';
+                convertButton.disabled = false;
+                hideMessages();
+            };
+            reader.readAsText(file);
+        });
+
+        // CSV Parser
+        function parseCSV(csv) {
+            const lines = csv.split('\n');
+            const cards = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+
+                // Handle CSV parsing with quoted fields
+                const values = [];
+                let current = '';
+                let inQuotes = false;
+
+                for (let char of lines[i]) {
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(current);
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                values.push(current);
+
+                if (values.length >= 4) {
+                    cards.push({
+                        term: values[0]?.trim() || '',
+                        phrase: values[1]?.trim() || '',
+                        language: values[2]?.trim() || '',
+                        meaning: values[3]?.trim() || ''
+                    });
+                }
+            }
+
+            return cards;
+        }
+
+        // XML Escaper
+        function escapeXml(text) {
+            if (!text) return '';
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&apos;');
+        }
+
+        // Convert to Pleco XML
+        function convertToPleco(cards) {
+            const timestamp = Math.floor(Date.now() / 1000);
+
+            let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<plecoflash formatversion="2" creator="LingQ Import" generator="LingQ to Pleco Converter" platform="Web" created="${timestamp}">
+<cards>`;
+
+            cards.forEach((card) => {
+                if (!card.term) return;
+
+                xml += `
+<card language="chinese">
+<entry>
+<headword charset="sc">${escapeXml(card.term)}</headword>`;
+
+                // Add definition
+                if (card.meaning) {
+                    xml += `
+<defn>${escapeXml(card.meaning)}</defn>`;
+                }
+
+                xml += `
+</entry>`;
+
+                // Add category based on language
+                if (card.language) {
+                    xml += `
+<catassign category="LingQ Import"/>`;
+                }
+
+                xml += `
+</card>`;
+            });
+
+            xml += `
+</cards>
+</plecoflash>`;
+
+            return xml;
+        }
+
+        // Hide all messages
+        function hideMessages() {
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+            downloadSection.classList.remove('show');
+        }
+
+        // Show error
+        function showError(message) {
+            hideMessages();
+            errorText.textContent = message;
+            errorMessage.classList.add('show');
+        }
+
+        // Show success
+        function showSuccess(message) {
+            hideMessages();
+            successText.textContent = message;
+            successMessage.classList.add('show');
+        }
+
+        // Convert button handler
+        convertButton.addEventListener('click', () => {
+            try {
+                if (!csvData) {
+                    showError('Bitte lade zuerst eine CSV-Datei hoch');
+                    return;
+                }
+
+                const cards = parseCSV(csvData);
+
+                if (cards.length === 0) {
+                    showError('Keine gültigen Karten in der CSV-Datei gefunden');
+                    return;
+                }
+
+                convertedXml = convertToPleco(cards);
+                showSuccess(`${cards.length} Karten erfolgreich konvertiert!`);
+                downloadSection.classList.add('show');
+            } catch (err) {
+                showError(`Konvertierungsfehler: ${err.message}`);
+            }
+        });
+
+        // Download button handler
+        downloadButton.addEventListener('click', () => {
+            if (!convertedXml) return;
+
+            const blob = new Blob([convertedXml], { type: 'text/xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'lingq-zu-pleco.xml';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+</html>
